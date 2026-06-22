@@ -4,10 +4,10 @@
 [![](https://github.com/gsjonio/windows-scripting-automation/actions/workflows/validate.yml/badge.svg)](https://github.com/gsjonio/windows-scripting-automation/actions/workflows/validate.yml)
 [![](https://github.com/gsjonio/windows-scripting-automation/actions/workflows/security.yml/badge.svg)](https://github.com/gsjonio/windows-scripting-automation/actions/workflows/security.yml)
 [![](https://github.com/gsjonio/windows-scripting-automation/actions/workflows/documentation.yml/badge.svg)](https://github.com/gsjonio/windows-scripting-automation/actions/workflows/documentation.yml)
-[![Version](https://img.shields.io/badge/version-v0.3.6-blue)](https://github.com/gsjonio/windows-scripting-automation/releases/tag/v0.3.6)
-[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![PowerShell](https://img.shields.io/badge/PowerShell-7.0%2B-blue)](https://github.com/PowerShell/PowerShell)
-[![Docs](https://img.shields.io/badge/docs-EN%2FPT--BR-orange)](README.md)
+[![](https://img.shields.io/badge/version-v0.3.6-blue)](https://github.com/gsjonio/windows-scripting-automation/releases/tag/v0.3.6)
+[![](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![](https://img.shields.io/badge/PowerShell-7.0%2B-blue)](https://github.com/PowerShell/PowerShell)
+[![](https://img.shields.io/badge/docs-EN%2FPT--BR-orange)](README.md)
 
 [English](#english) | [Português](#português)
 
