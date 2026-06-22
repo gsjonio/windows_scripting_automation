@@ -38,6 +38,12 @@ function Install-BasePrograms {
             Name     = "WhatsApp"
             WingetId = "WhatsApp.WhatsApp"
             Executable = "whatsapp"
+        },
+        @{
+            Name     = "Spotify"
+            WingetId = "Spotify.Spotify"
+            ChocoId  = "spotify"
+            Executable = "spotify"
         }
     )
 

@@ -15,12 +15,6 @@ function Install-GamingPrograms {
             WingetId = "Discord.Discord"
             ChocoId  = "discord"
             Executable = "discord"
-        },
-        @{
-            Name     = "Spotify"
-            WingetId = "Spotify.Spotify"
-            ChocoId  = "spotify"
-            Executable = "spotify"
         }
     )
 
