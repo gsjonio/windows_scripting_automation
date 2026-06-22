@@ -1,5 +1,14 @@
 ﻿# Windows Post-Format Automation Setup
 
+[![Lint](https://github.com/Gustavo496/windows-scripting-automation/actions/workflows/lint.yml/badge.svg)](https://github.com/Gustavo496/windows-scripting-automation/actions/workflows/lint.yml)
+[![Validate](https://github.com/Gustavo496/windows-scripting-automation/actions/workflows/validate.yml/badge.svg)](https://github.com/Gustavo496/windows-scripting-automation/actions/workflows/validate.yml)
+[![Security](https://github.com/Gustavo496/windows-scripting-automation/actions/workflows/security.yml/badge.svg)](https://github.com/Gustavo496/windows-scripting-automation/actions/workflows/security.yml)
+[![Documentation](https://github.com/Gustavo496/windows-scripting-automation/actions/workflows/documentation.yml/badge.svg)](https://github.com/Gustavo496/windows-scripting-automation/actions/workflows/documentation.yml)
+[![Release](https://img.shields.io/badge/version-v0.3.3-blue)](https://github.com/Gustavo496/windows-scripting-automation/releases/tag/v0.3.3)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![PowerShell](https://img.shields.io/badge/PowerShell-7.0%2B-blue)](https://github.com/PowerShell/PowerShell)
+[![Bilingual](https://img.shields.io/badge/docs-EN%2FPT--BR-orange)](README.md)
+
 [English](#english) | [Português](#português)
 
 > **📁 Organized by Responsibility** — See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for project structure
