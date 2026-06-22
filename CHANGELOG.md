@@ -46,10 +46,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `Enable-Feature()` / `Disable-Feature()` - Windows optional features
   - `Set-FileAssociation()` - Configure file type associations
 
-- **Installation Groups** (4 groups, 15 programs)
+- **Installation Groups** (4 groups, 16 programs)
   - **Base** (5 programs) - Firefox, Git, VLC, WinRAR, LibreOffice
   - **Dev** (4 programs) - VS Code, GitHub Desktop, Claude, Python
-  - **Gaming** (3 programs) - Steam, Discord, Spotify
+  - **Gaming & Social** (4 programs) - Steam, Discord, Spotify, WhatsApp
   - **System** (3 programs) - NVIDIA App, CPU-Z, HWMonitor
   - Modular group system for easy customization
   - Winget + Chocolatey fallback for all programs
