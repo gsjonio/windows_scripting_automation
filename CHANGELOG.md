@@ -46,11 +46,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `Enable-Feature()` / `Disable-Feature()` - Windows optional features
   - `Set-FileAssociation()` - Configure file type associations
 
-- **Installation Groups**
-  - Base group - Essential programs (always executed)
-  - Dev group - Development tools and configurations
-  - Gaming group - Gaming applications and settings
-  - Modular template system for custom groups
+- **Installation Groups** (4 groups, 14 programs)
+  - **Base** (5 programs) - Firefox, Git, VLC, WinRAR, LibreOffice
+  - **Dev** (3 programs) - VS Code, GitHub Desktop, Claude
+  - **Gaming** (3 programs) - Steam, Discord, Spotify
+  - **System** (3 programs) - NVIDIA App, CPU-Z, HWMonitor
+  - Modular group system for easy customization
+  - Winget + Chocolatey fallback for all programs
 
 - **Code Quality**
   - PSScriptAnalyzer integration (`.pslintrc` configuration)
@@ -74,9 +76,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Project Structure**
   - `src/core/` - Core business logic
   - `src/utils/` - Reusable utilities (4 files)
-  - `src/modules/` - Installation groups (3 files)
-  - `docs/` - Comprehensive documentation (7 files)
-  - `tools/` - Utility scripts
+  - `src/modules/` - Installation groups (4 files: base, dev, gaming, system)
+  - `docs/` - Comprehensive documentation (9 files including GITHUB-ACTIONS.md)
+  - `tools/` - Utility scripts (lint, validate)
+  - `.github/workflows/` - CI/CD automation (6 workflows)
   - `config/` - Reserved for future configuration
   - `tests/` - Reserved for future testing
 
