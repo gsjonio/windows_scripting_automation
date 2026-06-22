@@ -21,11 +21,6 @@ function Install-GamingPrograms {
             WingetId = "Spotify.Spotify"
             ChocoId  = "spotify"
             Executable = "spotify"
-        },
-        @{
-            Name     = "WhatsApp"
-            WingetId = "WhatsApp.WhatsApp"
-            Executable = "whatsapp"
         }
     )
 
