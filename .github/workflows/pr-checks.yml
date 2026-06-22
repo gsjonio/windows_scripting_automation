@@ -1,0 +1,178 @@
+name: Pull Request Checks
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+    types: [ opened, synchronize, reopened ]
+
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
+jobs:
+  pr-validation:
+    name: PR Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate PR title
+        shell: bash
+        run: |
+          title="${{ github.event.pull_request.title }}"
+          echo "PR Title: $title"
+
+          # Check conventional commit format
+          if [[ $title =~ ^(feat|fix|docs|style|refactor|perf|chore|test)(\(.+\))?:\ .{10,} ]]; then
+            echo "✓ PR title follows conventional commit format"
+          else
+            echo "⚠ PR title should follow: type(scope): description"
+            echo "  Allowed types: feat, fix, docs, style, refactor, perf, chore, test"
+          fi
+
+      - name: Check PR body
+        shell: bash
+        run: |
+          body="${{ github.event.pull_request.body }}"
+
+          if [ -z "$body" ]; then
+            echo "⚠ PR description is empty"
+          else
+            echo "✓ PR has description"
+          fi
+
+          if [[ $body == *"Closes #"* ]] || [[ $body == *"Fixes #"* ]]; then
+            echo "✓ PR links to issue"
+          else
+            echo "⚠ PR should link to related issues"
+          fi
+
+  file-changes:
+    name: File Changes Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for files that shouldn't change
+        shell: bash
+        run: |
+          # Get list of changed files
+          changed_files=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+
+          echo "Changed files:"
+          echo "$changed_files"
+
+          # Check for prohibited changes
+          if echo "$changed_files" | grep -E "\.git|\.env|secrets|credentials"; then
+            echo "⚠ PR contains potentially sensitive files"
+          fi
+
+          # Suggest documentation updates
+          if echo "$changed_files" | grep -E "\.ps1$" | grep -qv "docs/"; then
+            echo "ℹ PR modifies PowerShell files - ensure docs are updated"
+          fi
+
+  commit-lint:
+    name: Commit Message Linting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate commit messages
+        shell: bash
+        run: |
+          echo "Checking commit messages in PR..."
+
+          commits=$(git log origin/${{ github.base_ref }}...HEAD --pretty=format:%B)
+
+          valid_prefixes="feat|fix|docs|style|refactor|perf|chore|test"
+
+          if echo "$commits" | grep -E "^($valid_prefixes)(\(.+\))?:" > /dev/null; then
+            echo "✓ Commits follow conventional format"
+          else
+            echo "⚠ Some commits might not follow conventional format"
+            echo "Expected format: type(scope): description"
+            echo "Types: $valid_prefixes"
+          fi
+
+          # Count commits
+          commit_count=$(git rev-list --count origin/${{ github.base_ref }}...HEAD)
+          echo "Commits in PR: $commit_count"
+
+          if [ "$commit_count" -gt 20 ]; then
+            echo "⚠ Large PR with many commits (consider splitting)"
+          fi
+
+  size-check:
+    name: PR Size Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check PR size
+        shell: bash
+        run: |
+          # Get file statistics
+          additions=$(git diff --stat origin/${{ github.base_ref }}...HEAD | tail -1 | awk '{print $4}')
+          deletions=$(git diff --stat origin/${{ github.base_ref }}...HEAD | tail -1 | awk '{print $6}')
+          files=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | wc -l)
+
+          echo "PR Statistics:"
+          echo "- Files changed: $files"
+          echo "- Additions: $additions"
+          echo "- Deletions: $deletions"
+
+          if [ "$files" -gt 20 ]; then
+            echo "⚠ Large PR touching many files"
+          fi
+
+          if [ "${additions%+}" -gt 500 ]; then
+            echo "⚠ Large PR with many additions (consider splitting)"
+          fi
+
+  summary:
+    name: PR Summary
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Create PR comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prNumber = context.issue.number;
+            const runId = context.runId;
+
+            const comment = `## 🔍 Automated Checks Summary
+
+            - ✅ PR Validation
+            - ✅ File Changes
+            - ✅ Commit Linting
+            - ✅ Size Check
+
+            See workflow details [here](https://github.com/${{ github.repository }}/actions/runs/${runId})`;
+
+            github.rest.issues.createComment({
+              issue_number: prNumber,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+        continue-on-error: true

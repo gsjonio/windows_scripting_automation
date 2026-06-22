@@ -1,0 +1,119 @@
+name: Validation
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly on Sunday
+
+jobs:
+  project-structure:
+    name: Validate Project Structure
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check required files
+        shell: bash
+        run: |
+          echo "Checking required files..."
+          required_files=(
+            "setup.ps1"
+            "README.md"
+            "CHANGELOG.md"
+            ".pslintrc"
+            "src/core/Installation.ps1"
+            "src/utils/Logging.ps1"
+            "src/utils/Validation.ps1"
+            "src/utils/Registry.ps1"
+            "src/utils/System.ps1"
+            "src/modules/base.ps1"
+            "src/modules/dev.ps1"
+            "src/modules/gaming.ps1"
+            "docs/ARCHITECTURE.md"
+            "docs/EXAMPLES.md"
+            "tools/lint.ps1"
+            "tools/validate.ps1"
+          )
+
+          for file in "${required_files[@]}"; do
+            if [ ! -f "$file" ]; then
+              echo "✗ Missing: $file"
+              exit 1
+            else
+              echo "✓ Found: $file"
+            fi
+          done
+
+          echo "✓ All required files present"
+
+  documentation:
+    name: Validate Documentation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check markdown links
+        uses: gaurav-nelson/github-action-markdown-link-check@v1
+        with:
+          use-quiet-mode: 'yes'
+          folder-path: '.github'
+          config-file: '.github/workflows/markdown-link-check.json'
+        continue-on-error: true
+
+      - name: Validate CHANGELOG format
+        shell: bash
+        run: |
+          echo "Checking CHANGELOG.md format..."
+          if grep -q "^## \[" CHANGELOG.md; then
+            echo "✓ CHANGELOG follows Keep a Changelog format"
+          else
+            echo "⚠ CHANGELOG might not follow standard format"
+          fi
+
+          if grep -q "Semantic Versioning" CHANGELOG.md; then
+            echo "✓ CHANGELOG references semantic versioning"
+          else
+            echo "⚠ CHANGELOG should reference semantic versioning"
+          fi
+
+  git-history:
+    name: Validate Git History
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check commit message format
+        shell: bash
+        run: |
+          echo "Checking last 20 commits..."
+          commits=$(git log -20 --pretty=format:%B)
+
+          if echo "$commits" | grep -qE "^(feat|fix|docs|style|refactor|perf|chore|test)(\(.+\))?:"; then
+            echo "✓ Commits follow conventional format"
+          else
+            echo "⚠ Some commits might not follow conventional format"
+            echo "Recommended: feat|fix|docs|style|refactor|perf|chore|test"
+          fi
+
+      - name: Check tags
+        shell: bash
+        run: |
+          echo "Checking version tags..."
+          tags=$(git tag -l 'v*' | sort -V | tail -5)
+          if [ -z "$tags" ]; then
+            echo "⚠ No version tags found (use v0.1.0 format)"
+          else
+            echo "✓ Version tags found:"
+            echo "$tags"
+          fi

@@ -1,0 +1,120 @@
+name: Documentation
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - '**.md'
+      - '**.ps1'
+      - 'docs/**'
+      - '.github/workflows/documentation.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - '**.md'
+      - 'docs/**'
+
+jobs:
+  validate-markdown:
+    name: Validate Markdown
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Lint markdown files
+        uses: nosborn/github-action-markdown-cli@v3.3.0
+        with:
+          files: .
+          config_file: '.markdownlint.json'
+        continue-on-error: true
+
+      - name: Check for broken markdown links
+        uses: gaurav-nelson/github-action-markdown-link-check@v1
+        with:
+          use-quiet-mode: 'yes'
+        continue-on-error: true
+
+  docs-build:
+    name: Documentation Build Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate README.md
+        shell: bash
+        run: |
+          echo "Validating README.md..."
+          if [ ! -f "README.md" ]; then
+            echo "✗ README.md not found"
+            exit 1
+          fi
+
+          if grep -q "Quick Start\|Quick start\|Getting Started\|Getting started" README.md; then
+            echo "✓ README contains getting started section"
+          else
+            echo "⚠ README might be missing getting started section"
+          fi
+
+          if grep -q "\[ARCHITECTURE\|Architecture\|STRUCTURE\|Structure" README.md; then
+            echo "✓ README links to documentation"
+          else
+            echo "⚠ README might not link to documentation"
+          fi
+
+      - name: Check documentation completeness
+        shell: bash
+        run: |
+          echo "Checking documentation files..."
+          docs=(
+            "docs/ARCHITECTURE.md"
+            "docs/EXAMPLES.md"
+            "docs/VALIDATION.md"
+          )
+
+          for doc in "${docs[@]}"; do
+            if [ -f "$doc" ]; then
+              lines=$(wc -l < "$doc")
+              echo "✓ $doc ($lines lines)"
+            else
+              echo "✗ $doc not found"
+            fi
+          done
+
+  code-stats:
+    name: Code Statistics
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Generate code statistics
+        shell: bash
+        run: |
+          echo "## Code Statistics" > /tmp/stats.md
+          echo "" >> /tmp/stats.md
+
+          ps_files=$(find . -name "*.ps1" | wc -l)
+          ps_lines=$(find . -name "*.ps1" -exec wc -l {} + | awk '{sum+=$1} END {print sum}')
+          md_files=$(find . -name "*.md" | wc -l)
+          md_lines=$(find . -name "*.md" -exec wc -l {} + | awk '{sum+=$1} END {print sum}')
+
+          echo "### PowerShell Files" >> /tmp/stats.md
+          echo "- Files: $ps_files" >> /tmp/stats.md
+          echo "- Lines of code: $ps_lines" >> /tmp/stats.md
+          echo "" >> /tmp/stats.md
+
+          echo "### Documentation Files" >> /tmp/stats.md
+          echo "- Files: $md_files" >> /tmp/stats.md
+          echo "- Lines of documentation: $md_lines" >> /tmp/stats.md
+          echo "" >> /tmp/stats.md
+
+          echo "Generated at: $(date -u)" >> /tmp/stats.md
+
+          echo "✓ Code statistics generated"
+          cat /tmp/stats.md

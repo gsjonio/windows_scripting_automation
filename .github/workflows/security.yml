@@ -1,0 +1,122 @@
+name: Security Checks
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - '**.ps1'
+      - '.github/workflows/security.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - '**.ps1'
+  schedule:
+    - cron: '0 0 * * 0'  # Weekly scan
+
+jobs:
+  powershell-security:
+    name: PowerShell Security Analysis
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run PSScriptAnalyzer security rules
+        shell: pwsh
+        run: |
+          Install-Module -Name PSScriptAnalyzer -Scope CurrentUser -Force -Confirm:$false
+
+          $rules = @(
+            'PSAvoidUsingPlainTextForPassword',
+            'PSAvoidUsingConvertToSecureStringWithPlainText',
+            'PSAvoidUsingUsernameAndPasswordParams',
+            'PSAvoidUsingInvokeExpression',
+            'PSAvoidUsingComputerNameHardcoded'
+          )
+
+          $results = Invoke-ScriptAnalyzer -Path "." -Recurse -IncludeRule $rules
+
+          if ($results) {
+            Write-Host "Security issues found:"
+            $results | Format-Table -AutoSize
+            exit 1
+          } else {
+            Write-Host "✓ No security issues detected"
+          }
+
+  dependencies:
+    name: Check Dependencies
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for external dependencies
+        shell: bash
+        run: |
+          echo "Checking for external dependencies in PowerShell files..."
+
+          # Check for external module imports
+          imports=$(grep -r "Import-Module" . --include="*.ps1" | grep -v "PSScriptAnalyzer" | grep -v "^Binary" || true)
+
+          if [ -z "$imports" ]; then
+            echo "✓ No suspicious module imports found"
+          else
+            echo "Found module imports (verify security):"
+            echo "$imports"
+          fi
+
+          # Check for external URL downloads
+          urls=$(grep -r "DownloadString\|Invoke-WebRequest" . --include="*.ps1" | grep -v "https://community.chocolatey.org" | grep -v "^Binary" || true)
+
+          if [ -z "$urls" ]; then
+            echo "✓ No external URL downloads (except Chocolatey)"
+          else
+            echo "Found external downloads (verify security):"
+            echo "$urls"
+          fi
+
+  credential-scan:
+    name: Credential Scanning
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: TruffleHog Secret Scanning
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+        continue-on-error: true
+
+  code-vulnerabilities:
+    name: Dependency Vulnerability Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for known vulnerable patterns
+        shell: bash
+        run: |
+          echo "Scanning for vulnerable patterns..."
+
+          # Check for unvalidated user input
+          patterns=$(grep -r "\$ARGS\|\$input" . --include="*.ps1" | grep -v "validated\|checked" | grep -v "^Binary" || true)
+
+          if [ -z "$patterns" ]; then
+            echo "✓ No obvious unvalidated input patterns"
+          else
+            echo "⚠ Found potential input patterns (verify validation):"
+            echo "$patterns"
+          fi
+
+          echo "✓ Vulnerability scan complete"

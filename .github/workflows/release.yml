@@ -1,0 +1,71 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract version from tag
+        id: version
+        shell: bash
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "tag=$GITHUB_REF" >> $GITHUB_OUTPUT
+          echo "Release version: $VERSION"
+
+      - name: Generate release notes from CHANGELOG
+        id: notes
+        shell: bash
+        run: |
+          # Extract changelog section for this version
+          version=${{ steps.version.outputs.version }}
+
+          # Find the section for this version in CHANGELOG
+          changelog=$(awk "/^\## \[$version\]/,/^\## \[/" CHANGELOG.md | head -n -1)
+
+          if [ -z "$changelog" ]; then
+            echo "## Release $version" > release_notes.md
+            echo "" >> release_notes.md
+            echo "See [CHANGELOG.md](CHANGELOG.md) for details" >> release_notes.md
+          else
+            echo "$changelog" > release_notes.md
+          fi
+
+          # Read the notes into output variable
+          notes=$(cat release_notes.md)
+          echo "notes<<EOF" >> $GITHUB_OUTPUT
+          echo "$notes" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: Release v${{ steps.version.outputs.version }}
+          body: ${{ steps.notes.outputs.notes }}
+          draft: false
+          prerelease: ${{ contains(steps.version.outputs.version, '-') }}
+          files: |
+            README.md
+            CHANGELOG.md
+            .pslintrc
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Notify release
+        shell: bash
+        run: |
+          echo "✓ Release v${{ steps.version.outputs.version }} created successfully"
+          echo "📦 Tag: ${{ steps.version.outputs.tag }}"

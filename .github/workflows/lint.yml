@@ -1,0 +1,52 @@
+name: Code Quality (Lint)
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - '**.ps1'
+      - '.pslintrc'
+      - '.github/workflows/lint.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - '**.ps1'
+      - '.pslintrc'
+
+jobs:
+  lint:
+    name: PSScriptAnalyzer
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install PSScriptAnalyzer
+        shell: pwsh
+        run: |
+          Install-Module -Name PSScriptAnalyzer -Scope CurrentUser -Force -Confirm:$false
+
+      - name: Run linting
+        shell: pwsh
+        run: |
+          $results = Invoke-ScriptAnalyzer -Path "." -Recurse -Severity Error
+          if ($results) {
+            Write-Host "Linting errors found:"
+            $results | Format-Table -AutoSize
+            exit 1
+          } else {
+            Write-Host "✓ All scripts pass linting checks"
+          }
+
+      - name: Detailed analysis (warnings)
+        shell: pwsh
+        continue-on-error: true
+        run: |
+          $results = Invoke-ScriptAnalyzer -Path "." -Recurse -Severity Warning
+          if ($results) {
+            Write-Host "Warnings found:"
+            $results | Format-Table -AutoSize
+          } else {
+            Write-Host "✓ No warnings found"
+          }
