@@ -13,12 +13,9 @@ function Install-Chocolatey {
     Write-Log "Installing Chocolatey..." -Level Info
 
     try {
-        $chocoInstall = @'
-[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-'@
-
-        Invoke-Expression $chocoInstall
+        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+        $chocoScript = (New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1')
+        & ([scriptblock]::Create($chocoScript))
 
         if (Test-ChocoInstalled) {
             Write-Log "Chocolatey installed successfully" -Level Success
