@@ -20,7 +20,7 @@
 
 param(
     [Parameter(Mandatory = $false)]
-    [ValidateSet("base", "dev", "gaming", "system")]
+    [ValidateSet("base", "dev", "gaming", "system", "optimize")]
     [string]$Group,
 
     [switch]$SkipElevation
@@ -76,7 +76,7 @@ if ($Group) {
     Write-Log "Running group: $Group" -Level Info
 }
 else {
-    $groupsToRun = @("base", "dev", "gaming", "system")
+    $groupsToRun = @("base", "dev", "gaming", "system", "optimize")
     Write-Log "Running all groups" -Level Info
 }
 
