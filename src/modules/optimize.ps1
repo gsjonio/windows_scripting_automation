@@ -104,21 +104,45 @@ function Set-OptimizeConfiguration {
         Set-RegistryValue "HKLM:\Software\Policies\Microsoft\Windows\Device Metadata" "PreventDeviceMetadataFromNetwork" 1 "DWORD"
     }
 
-    # Desktop-specific services (Xbox, Bluetooth, Game Bar)
-    Apply-SystemConfig "Disable Xbox services" {
-        Get-Service -Name "XblAuthManager" -ErrorAction SilentlyContinue | Set-Service -StartupType Disabled -ErrorAction SilentlyContinue
-        Get-Service -Name "XblGameSave" -ErrorAction SilentlyContinue | Set-Service -StartupType Disabled -ErrorAction SilentlyContinue
-        Write-Log "Xbox services disabled" -Level Info
+    # Desktop service optimizations (disable unnecessary services)
+    Apply-SystemConfig "Disable diagnostic tracking service" {
+        Get-Service -Name "DiagTrack" -ErrorAction SilentlyContinue | Set-Service -StartupType Disabled -ErrorAction SilentlyContinue
     }
 
-    Apply-SystemConfig "Disable Bluetooth service" {
-        Get-Service -Name "BthHFSrv" -ErrorAction SilentlyContinue | Set-Service -StartupType Disabled -ErrorAction SilentlyContinue
-        Write-Log "Bluetooth service disabled" -Level Info
+    Apply-SystemConfig "Disable device metadata sync" {
+        Get-Service -Name "dmwappushservice" -ErrorAction SilentlyContinue | Set-Service -StartupType Disabled -ErrorAction SilentlyContinue
     }
 
-    Apply-SystemConfig "Disable Game Bar service" {
-        Get-Service -Name "GamesAppIntegrationService" -ErrorAction SilentlyContinue | Set-Service -StartupType Disabled -ErrorAction SilentlyContinue
-        Write-Log "Game Bar service disabled" -Level Info
+    Apply-SystemConfig "Disable OneDrive sync service" {
+        Get-Service -Name "OneSyncSvc" -ErrorAction SilentlyContinue | Set-Service -StartupType Disabled -ErrorAction SilentlyContinue
+    }
+
+    Apply-SystemConfig "Disable Hyper-V Host service" {
+        Get-Service -Name "HvHost" -ErrorAction SilentlyContinue | Set-Service -StartupType Disabled -ErrorAction SilentlyContinue
+    }
+
+    Apply-SystemConfig "Disable Internet Connection Sharing" {
+        Get-Service -Name "SharedAccess" -ErrorAction SilentlyContinue | Set-Service -StartupType Disabled -ErrorAction SilentlyContinue
+    }
+
+    Apply-SystemConfig "Disable SysMain (Prefetch)" {
+        Get-Service -Name "SysMain" -ErrorAction SilentlyContinue | Set-Service -StartupType Disabled -ErrorAction SilentlyContinue
+    }
+
+    Apply-SystemConfig "Disable Storage service" {
+        Get-Service -Name "StorSvc" -ErrorAction SilentlyContinue | Set-Service -StartupType Disabled -ErrorAction SilentlyContinue
+    }
+
+    Apply-SystemConfig "Disable offline files" {
+        Get-Service -Name "CscService" -ErrorAction SilentlyContinue | Set-Service -StartupType Disabled -ErrorAction SilentlyContinue
+    }
+
+    Apply-SystemConfig "Disable performance diagnostics" {
+        Get-Service -Name "DPS" -ErrorAction SilentlyContinue | Set-Service -StartupType Disabled -ErrorAction SilentlyContinue
+    }
+
+    Apply-SystemConfig "Disable tablet input service" {
+        Get-Service -Name "TabletInputService" -ErrorAction SilentlyContinue | Set-Service -StartupType Disabled -ErrorAction SilentlyContinue
     }
 
     Write-Log "All system optimizations completed" -Level Success
