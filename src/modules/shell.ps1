@@ -3,6 +3,13 @@
 function Install-ShellPrograms {
     Write-GroupHeader "SHELL - PowerShell Enhancement"
 
+    # Update PowerShell to latest version before installing Oh My Posh
+    Apply-SystemConfig "Update PowerShell to latest version" {
+        Write-Log "Checking for PowerShell updates..." -Level Info
+        winget upgrade --id Microsoft.PowerShell -e -ErrorAction SilentlyContinue
+        Write-Log "PowerShell update check completed" -Level Success
+    }
+
     $programs = @(
         @{
             Name     = "Oh My Posh"
@@ -69,41 +76,74 @@ function Set-ShellConfiguration {
         }
 
         $profileContent = @'
+# Clear screen before initializing Oh My Posh
+Clear-Host
+
 # ========== Oh My Posh Configuration ==========
 # Initialize Oh My Posh with dracula theme (PowerShell 7+ only)
 # Requires: winget install JanDeDobbeleer.OhMyPosh -s winget
+#
+# About Oh My Posh:
+# - Modern, customizable terminal prompt similar to oh-my-zsh for Linux/macOS
+# - Supports 100+ themes (dracula, nord, powerlevel10k, tokyo, catppuccin, etc)
+# - Git repository status displayed automatically
+# - Cross-platform compatible (Windows, macOS, Linux)
+#
+# To change theme, edit the config path below:
+# - List themes: Get-ChildItem -Path "$(oh-my-posh get shell)/Themes"
+# - Current: dracula (dark, elegant color scheme)
+# - Alternative themes: nord, powerlevel10k, tokyo, gruvbox, catppuccin
+
 if ($PSVersionTable.PSVersion.Major -ge 7) {
     if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
-        oh-my-posh init pwsh | Out-String | Invoke-Expression
+        # Initialize Oh My Posh with dracula theme
+        $themePath = "$(oh-my-posh get shell)/Themes/dracula.omp.json"
+        oh-my-posh init pwsh --config $themePath | Out-String | Invoke-Expression
     }
 }
 
 # ========== PSReadLine Configuration ==========
-# Check PowerShell version for parameter compatibility
+# PSReadLine provides intelligent command line editing, history search, and autocomplete
+# Version compatibility: Works on PowerShell 5.1 and 7+, with enhanced features on 7+
+#
+# Features enabled:
+# - History prediction from previous commands
+# - Tab menu for autocomplete (like bash)
+# - Ctrl+R for reverse history search (like Linux)
+# - Command history saved between sessions
+
 if ($PSVersionTable.PSVersion.Major -ge 7) {
-    # PowerShell 7+ parameters
-    Set-PSReadLineOption -PredictionSource History
-    Set-PSReadLineOption -PredictionViewStyle ListView
+    # PowerShell 7+ parameters - better prediction
+    Set-PSReadLineOption -PredictionSource History -ErrorAction SilentlyContinue
+    Set-PSReadLineOption -PredictionViewStyle ListView -ErrorAction SilentlyContinue
 } else {
-    # PowerShell 5.1 compatible - use basic setup
-    Set-PSReadLineOption -HistorySearchCursorMovesToEnd
+    # PowerShell 5.1 compatible - use basic history features
+    Set-PSReadLineOption -HistorySearchCursorMovesToEnd -ErrorAction SilentlyContinue
 }
 
-# Enable Tab completion menu (works on both versions)
+# Enable Tab completion menu (works on both versions) - like bash
 Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete -ErrorAction SilentlyContinue
 
-# Advanced history search (Ctrl+R and Ctrl+S) - works on both versions
+# Advanced history search (Ctrl+R and Ctrl+S) - familiar from Linux shells
 Set-PSReadLineKeyHandler -Key Ctrl+r -Function ReverseSearchHistory -ErrorAction SilentlyContinue
 Set-PSReadLineKeyHandler -Key Ctrl+s -Function ForwardSearchHistory -ErrorAction SilentlyContinue
 
-# Keyboard shortcuts (works on both versions)
+# Keyboard shortcuts - familiar Linux/macOS keybindings
 Set-PSReadLineKeyHandler -Key Ctrl+a -Function BeginningOfLine -ErrorAction SilentlyContinue
 Set-PSReadLineKeyHandler -Key Ctrl+e -Function EndOfLine -ErrorAction SilentlyContinue
 Set-PSReadLineKeyHandler -Key Ctrl+LeftArrow -Function BackwardWord -ErrorAction SilentlyContinue
 Set-PSReadLineKeyHandler -Key Ctrl+RightArrow -Function ForwardWord -ErrorAction SilentlyContinue
 
 # ========== Aliases ==========
-# Useful aliases for bash-like experience
+# Bash-compatible aliases for familiar command names
+# Helps users transitioning from Linux/macOS feel at home in PowerShell
+#
+# Usage:
+# - ll       : List files in long format (like ls -lh)
+# - la       : List all files including hidden (like ls -la)
+# - grep     : Search text patterns (like Linux grep)
+# - touch    : Create empty files
+
 Set-Alias -Name ll -Value Get-ChildItemLong -Force -ErrorAction SilentlyContinue
 Set-Alias -Name la -Value Get-ChildItemAll -Force -ErrorAction SilentlyContinue
 Set-Alias -Name grep -Value Select-String -Force -ErrorAction SilentlyContinue
