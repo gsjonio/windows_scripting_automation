@@ -4,7 +4,7 @@
 [![](https://github.com/gsjonio/windows-scripting-automation/actions/workflows/validate.yml/badge.svg)](https://github.com/gsjonio/windows-scripting-automation/actions/workflows/validate.yml)
 [![](https://github.com/gsjonio/windows-scripting-automation/actions/workflows/security.yml/badge.svg)](https://github.com/gsjonio/windows-scripting-automation/actions/workflows/security.yml)
 [![](https://github.com/gsjonio/windows-scripting-automation/actions/workflows/documentation.yml/badge.svg)](https://github.com/gsjonio/windows-scripting-automation/actions/workflows/documentation.yml)
-[![](https://img.shields.io/badge/version-v0.3.6-blue)](https://github.com/gsjonio/windows-scripting-automation/releases/tag/v0.3.6)
+[![](https://img.shields.io/badge/version-v0.5.3-blue)](https://github.com/gsjonio/windows-scripting-automation/releases/tag/v0.5.3)
 [![](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![](https://img.shields.io/badge/PowerShell-7.0%2B-blue)](https://github.com/PowerShell/PowerShell)
 [![](https://img.shields.io/badge/docs-EN%2FPT--BR-orange)](README.md)
@@ -149,7 +149,7 @@ Configuração: `.pslintrc`
 **Sistema (4)**: NVIDIA App, AMD Radeon, CPU-Z, HWMonitor
 **Optimize**: System optimizations & privacy tweaks (16+ configs)
 **Customize**: Windows UI & shell customizations (18+ configs)
-**Shell**: PowerShell enhancement with Oh My Posh + Fira Code
+**Shell**: PowerShell enhancement with Oh My Posh (half-life theme) + Fira Code
 
 ### Início Rápido
 
@@ -199,6 +199,29 @@ sudo code
 
 **Info:** This mimics Linux/macOS `sudo` behavior, making scripts more portable across platforms.
 
+### Oh My Posh with Half-Life Theme
+
+The **shell** group installs **Oh My Posh** with the **half-life** theme (a modern, game-inspired prompt).
+
+**Features:**
+
+- 🎮 Game-inspired prompt with custom segments
+- 🔄 Git repository status (branch, changes)
+- 🔤 User name and directory display
+- ⏱️ Timestamps and command status
+- 🎨 Fira Code font with perfect ligature rendering
+- ⚙️ Fully customizable via JSON configuration
+
+**Install shell enhancement:**
+
+```powershell
+sudo .\setup.ps1 -Group shell
+```
+
+**Customize theme:** Edit `$env:APPDATA\oh-my-posh\config.json`
+
+**Available themes:** 100+ themes at [ohmyposh.dev/docs/themes](https://ohmyposh.dev/docs/themes)
+
 ---
 
 ### Português - Suporte `sudo` Nativo do Windows 11
@@ -226,6 +249,29 @@ sudo code
 ```
 
 **Info:** Isso imita o comportamento de `sudo` do Linux/macOS, tornando scripts mais portáveis entre plataformas.
+
+### Oh My Posh com Tema Half-Life
+
+O grupo **shell** instala **Oh My Posh** com o tema **half-life** (um prompt moderno e inspirado em jogos).
+
+**Características:**
+
+- 🎮 Prompt inspirado em games com segmentos customizados
+- 🔄 Status do repositório Git (branch, alterações)
+- 🔤 Exibição de usuário e diretório
+- ⏱️ Timestamps e status de comando
+- 🎨 Fonte Fira Code com renderização perfeita de ligaduras
+- ⚙️ Totalmente customizável via configuração JSON
+
+**Instalar aprimoramento do shell:**
+
+```powershell
+sudo .\setup.ps1 -Group shell
+```
+
+**Customizar tema:** Edite `$env:APPDATA\oh-my-posh\config.json`
+
+**Temas disponíveis:** 100+ temas em [ohmyposh.dev/docs/themes](https://ohmyposh.dev/docs/themes)
 
 ---
 
