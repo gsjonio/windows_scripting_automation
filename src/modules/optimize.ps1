@@ -259,14 +259,6 @@ function Set-OptimizeConfiguration {
         Write-Log "Automatic TRIM enabled - SSD performance optimized" -Level Info
     }
 
-    Apply-SystemConfig "Configure defragmentation and TRIM scheduling" {
-        # Optimize drive maintenance scheduling
-        # Run at 2 AM on Wednesdays
-        schtasks /change /tn "Microsoft\Windows\Defrag\ScheduledDefrag" /st 02:00 /d WED /ru SYSTEM 2>&1 | Out-Null
-
-        Write-Log "Disk optimization scheduled for automatic execution" -Level Info
-    }
-
     # System Optimizations
     Apply-SystemConfig "Disable Fast Startup" {
         # Disable Fast Startup (hybrid boot)
