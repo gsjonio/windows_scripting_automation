@@ -141,7 +141,7 @@ Install-Module -Name PSScriptAnalyzer -Scope CurrentUser -Force
 
 Configuração: `.pslintrc`
 
-### Grupos Disponíveis (6 total)
+### Grupos Disponíveis (7 total)
 
 **Base (7)**: Firefox, Git, VLC, WinRAR, LibreOffice, WhatsApp, Spotify
 **Dev (4)**: VS Code, GitHub Desktop, Claude, Python
@@ -149,6 +149,7 @@ Configuração: `.pslintrc`
 **Sistema (4)**: NVIDIA App, AMD Radeon, CPU-Z, HWMonitor
 **Optimize**: System optimizations & privacy tweaks (16+ configs)
 **Customize**: Windows UI & shell customizations (18+ configs)
+**Shell**: PowerShell enhancement with Oh My Posh + Fira Code
 
 ### Início Rápido
 
@@ -163,6 +164,7 @@ Configuração: `.pslintrc`
 .\setup.ps1 -Group system     # 4 utilitários de sistema
 .\setup.ps1 -Group optimize   # Otimizações de privacidade e performance
 .\setup.ps1 -Group customize  # Customizações de UI do Windows
+.\setup.ps1 -Group shell      # Oh My Posh + Fira Code + customizações PowerShell
 
 # Validar instalações
 .\tools\validate.ps1

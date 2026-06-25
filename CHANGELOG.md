@@ -11,6 +11,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.5.1] - 2026-06-25
+
+### Added
+
+- **Shell Module** - PowerShell enhancement with Oh My Posh
+  - Install Oh My Posh for modern, customizable prompt
+  - Install Fira Code font with ligature support
+  - PSReadLine enhancements: history search, tab completion, prediction
+  - Keyboard shortcuts: Ctrl+R, Ctrl+S, Ctrl+A, Ctrl+E, word jump
+  - Custom aliases: `ll`, `la`, `grep`, `touch` (bash-like)
+  - Windows Terminal integration with Fira Code auto-config
+  - Full PowerShell profile setup with git integration
+  - 100+ theme support (dracula, nord, powerlevel10k, catppuccin, etc)
+
+- **Updated Core**
+  - `setup.ps1` now supports "shell" group parameter
+  - `setup.ps1 -Group shell` to run PowerShell enhancement
+  - Added shell to default group execution
+
+### Changed
+
+- Enhanced `setup.ps1` to include 7th group (shell) in default run
+
+---
+
 ## [0.5.0] - 2026-06-25
 
 ### Added
@@ -216,13 +241,14 @@ Registro de todas as alterações notáveis deste projeto.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere a [Versionamento Semântico](https://semver.org/spec/v2.0.0.html).
 
-### Versão Atual: v0.5.0
+### Versão Atual: v0.5.1
 
 #### Recursos Principais
 
 - **17 Programas** organizados em 4 grupos
 - **Otimizações de Sistema** - Módulo com 16+ configurações de privacidade
-- **Customizações de UI** - Novo módulo com 18+ configurações de interface
+- **Customizações de UI** - Módulo com 18+ configurações de interface
+- **Aprimoramento do Shell** - Oh My Posh + Fira Code + PSReadLine
 - **Instalação Multi-método**: Winget → Chocolatey → URL customizada
 - **Validação Inteligente**: 4 métodos de detecção de instalação
 - **Suporte GPU Dual**: NVIDIA App + AMD Radeon Software
@@ -236,17 +262,18 @@ e este projeto adere a [Versionamento Semântico](https://semver.org/spec/v2.0.0
 - **Gaming (2)**: Steam, Discord
 - **Sistema (4)**: NVIDIA App, AMD Radeon, CPU-Z, HWMonitor
 - **Optimize**: Otimizações de privacidade e performance
-- **Customize (novo)**: Customizações de UI e shell do Windows
+- **Customize**: Customizações de UI e shell do Windows
+- **Shell (novo)**: Oh My Posh + Fira Code + PowerShell customization
 
 #### Estatísticas
 
-- **Total de commits**: 42
-- **Versões**: 15 (v0.1.0 → v0.5.0)
-- **Arquivos**: 23+
-- **Scripts PowerShell**: 12
-- **Arquivos de documentação**: 9+
-- **Linhas de código**: ~1300
-- **Linhas de documentação**: ~3000
+- **Total de commits**: 44
+- **Versões**: 16 (v0.1.0 → v0.5.1)
+- **Arquivos**: 25+
+- **Scripts PowerShell**: 13
+- **Arquivos de documentação**: 10+
+- **Linhas de código**: ~1500
+- **Linhas de documentação**: ~3500
 
 #### Taxa de Sucesso de Instalação
 
