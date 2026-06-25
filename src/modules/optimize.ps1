@@ -165,5 +165,41 @@ function Set-OptimizeConfiguration {
         Get-Service -Name "lfsvc" -ErrorAction SilentlyContinue | Set-Service -StartupType Disabled -ErrorAction SilentlyContinue
     }
 
+    # Performance Visual Optimizations
+    Apply-SystemConfig "Disable animations and transitions" {
+        Set-RegistryValue "HKCU:\Control Panel\Desktop" "UserPreferencesMask" "9012038010000000" "String"
+    }
+
+    Apply-SystemConfig "Disable visual effects for performance" {
+        Set-RegistryValue "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" "ListviewAlphaEnabled" 0 "DWORD"
+        Set-RegistryValue "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" "TaskbarAnimations" 0 "DWORD"
+        Set-RegistryValue "HKCU:\Software\Microsoft\Windows\Dwm.Exe" "UseDeferredScheduling" 0 "DWORD"
+    }
+
+    Apply-SystemConfig "Disable window transparency and blur" {
+        Set-RegistryValue "HKCU:\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" "EnableTransparency" 0 "DWORD"
+        Set-RegistryValue "HKLM:\Software\Microsoft\Windows\DWM" "ForceEffectMode" 0 "DWORD"
+    }
+
+    Apply-SystemConfig "Disable tooltip animations" {
+        Set-RegistryValue "HKCU:\Control Panel\Desktop" "MenuShowDelay" "0" "String"
+    }
+
+    # Automatic Temp Files Cleanup
+    Apply-SystemConfig "Configure automatic temp files cleanup" {
+        # Enable Storage Sense (automatic cleanup)
+        Set-RegistryValue "HKCU:\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy" "01" 1 "DWORD"
+
+        # Cleanup temp files older than 1 day
+        Set-RegistryValue "HKCU:\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy" "04" 1 "DWORD"
+        Set-RegistryValue "HKCU:\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy" "08" 0 "DWORD"
+        Set-RegistryValue "HKCU:\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy" "32" 0 "DWORD"
+
+        # Cleanup recycle bin older than 30 days
+        Set-RegistryValue "HKCU:\Software\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy" "256" 30 "DWORD"
+
+        Write-Log "Storage Sense configured for automatic cleanup" -Level Info
+    }
+
     Write-Log "All system optimizations completed" -Level Success
 }
