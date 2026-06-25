@@ -141,9 +141,9 @@ Install-Module -Name PSScriptAnalyzer -Scope CurrentUser -Force
 
 Configuração: `.pslintrc`
 
-### Grupos Disponíveis (7 total)
+### Grupos Disponíveis (7 total, 15 programas)
 
-**Base (7)**: Firefox, Git, VLC, WinRAR, LibreOffice, WhatsApp, Spotify
+**Base (5)**: Firefox, Git, VLC, WinRAR, LibreOffice
 **Dev (4)**: VS Code, GitHub Desktop, Claude, Python
 **Gaming (2)**: Steam, Discord
 **Sistema (4)**: NVIDIA App, AMD Radeon, CPU-Z, HWMonitor
@@ -157,8 +157,11 @@ Configuração: `.pslintrc`
 # Executar todos os grupos (17 programas)
 .\setup.ps1
 
-# Executar grupo específico
-.\setup.ps1 -Group base       # 7 programas essenciais
+# Executar com privilégios de administrador
+powershell -NoProfile -ExecutionPolicy Bypass -File ".\setup.ps1"
+
+# Ou executar grupo específico
+.\setup.ps1 -Group base       # 5 programas essenciais
 .\setup.ps1 -Group dev        # 4 ferramentas desenvolvimento
 .\setup.ps1 -Group gaming     # 2 programas jogos
 .\setup.ps1 -Group system     # 4 utilitários de sistema
