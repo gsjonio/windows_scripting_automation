@@ -65,6 +65,15 @@ if (Test-IsElevated) {
 }
 else {
     Write-Log "WARNING: Not running as administrator" -Level Warning
+    Write-Host ""
+    Write-Host "Some features require administrator privileges (fonts, registry, services)." -ForegroundColor Yellow
+    Write-Host "Run as admin with: powershell -NoProfile -ExecutionPolicy Bypass -File `"$($MyInvocation.MyCommand.Path)`"" -ForegroundColor Gray
+    Write-Host ""
+    $continueAnyway = Read-Host "Continue without admin? (y/n)"
+    if ($continueAnyway -ne "y" -and $continueAnyway -ne "Y") {
+        Write-Log "Cancelled by user" -Level Info
+        exit 0
+    }
 }
 
 # ========== Execute Groups ==========
