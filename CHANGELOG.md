@@ -11,6 +11,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.5.2] - 2026-06-25
+
+### Changed
+
+- **Base Module**: Removed WhatsApp and Spotify (now 5 programs instead of 7)
+  - Keep only essential programs: Firefox, Git, VLC, WinRAR, LibreOffice
+  - Reduces bloat and improves focus on core utilities
+
+- **Admin Privileges Handling**
+  - Enhanced `setup.ps1` to ask user if they want to continue without admin
+  - Better warning messages about admin requirements
+  - Added command examples for running with elevated privileges
+
+### Added
+
+- **New Documentation**: `docs/ADMIN-PRIVILEGES.md`
+  - Complete guide on running scripts with administrator privileges
+  - 4 methods to elevate: right-click, command line, function, auto-detection
+  - Explains PowerShell elevation (equivalent to `sudo`)
+  - Troubleshooting guide for UAC and execution policy issues
+
+---
+
 ## [0.5.1] - 2026-06-25
 
 ### Added
@@ -241,11 +264,11 @@ Registro de todas as alterações notáveis deste projeto.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere a [Versionamento Semântico](https://semver.org/spec/v2.0.0.html).
 
-### Versão Atual: v0.5.1
+### Versão Atual: v0.5.2
 
 #### Recursos Principais
 
-- **17 Programas** organizados em 4 grupos
+- **15 Programas** organizados em 4 grupos (removidos WhatsApp e Spotify)
 - **Otimizações de Sistema** - Módulo com 16+ configurações de privacidade
 - **Customizações de UI** - Módulo com 18+ configurações de interface
 - **Aprimoramento do Shell** - Oh My Posh + Fira Code + PSReadLine
@@ -254,26 +277,28 @@ e este projeto adere a [Versionamento Semântico](https://semver.org/spec/v2.0.0
 - **Suporte GPU Dual**: NVIDIA App + AMD Radeon Software
 - **6 Workflows GitHub Actions** automáticos
 - **Documentação Bilíngue** completa
+- **Guia de Admin Privileges**: 4 métodos para elevar privilégios
 
 #### Grupos de Instalação
 
-- **Base (7)**: Firefox, Git, VLC, WinRAR, LibreOffice, WhatsApp, Spotify
+- **Base (5)**: Firefox, Git, VLC, WinRAR, LibreOffice
 - **Dev (4)**: VS Code, GitHub Desktop, Claude, Python
 - **Gaming (2)**: Steam, Discord
 - **Sistema (4)**: NVIDIA App, AMD Radeon, CPU-Z, HWMonitor
 - **Optimize**: Otimizações de privacidade e performance
 - **Customize**: Customizações de UI e shell do Windows
-- **Shell (novo)**: Oh My Posh + Fira Code + PowerShell customization
+- **Shell**: Oh My Posh + Fira Code + PowerShell customization
 
 #### Estatísticas
 
-- **Total de commits**: 44
-- **Versões**: 16 (v0.1.0 → v0.5.1)
-- **Arquivos**: 25+
+- **Total de commits**: 46
+- **Versões**: 17 (v0.1.0 → v0.5.2)
+- **Arquivos**: 26+
 - **Scripts PowerShell**: 13
-- **Arquivos de documentação**: 10+
+- **Arquivos de documentação**: 11+
 - **Linhas de código**: ~1500
-- **Linhas de documentação**: ~3500
+- **Linhas de documentação**: ~4000
+- **Programas**: 15 (reduzido de 17)
 
 #### Taxa de Sucesso de Instalação
 
