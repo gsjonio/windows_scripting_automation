@@ -173,6 +173,62 @@ powershell -NoProfile -ExecutionPolicy Bypass -File ".\setup.ps1"
 .\tools\validate.ps1
 ```
 
+### Windows 11 Native `sudo` Support
+
+Windows 11 (22H2+) supports native `sudo` command - no need for `Start-Process -Verb RunAs`!
+
+**Enable sudo:**
+
+1. Open **Settings** → **System** → **For developers**
+2. Scroll to **Terminal** section
+3. Toggle **"Habilitar sudo"** (Enable sudo) **ON**
+
+**Usage:**
+
+```powershell
+# Run script with admin privileges
+sudo .\setup.ps1
+
+# Run specific group
+sudo .\setup.ps1 -Group shell
+
+# Run any command as admin
+sudo Get-Process
+sudo code
+```
+
+**Info:** This mimics Linux/macOS `sudo` behavior, making scripts more portable across platforms.
+
+---
+
+### Português - Suporte `sudo` Nativo do Windows 11
+
+Windows 11 (22H2+) suporta comando `sudo` nativo - sem precisa usar `Start-Process -Verb RunAs`!
+
+**Ativar sudo:**
+
+1. Abra **Configurações** → **Sistema** → **Para desenvolvedores**
+2. Role até a seção **Terminal**
+3. Ative **"Habilitar sudo"** com o toggle
+
+**Uso:**
+
+```powershell
+# Executar script com privilégios admin
+sudo .\setup.ps1
+
+# Executar grupo específico
+sudo .\setup.ps1 -Group shell
+
+# Executar qualquer comando como admin
+sudo Get-Process
+sudo code
+```
+
+**Info:** Isso imita o comportamento de `sudo` do Linux/macOS, tornando scripts mais portáveis entre plataformas.
+
+---
+
 ### Documentação
 
 - **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** - Estrutura e design do projeto
